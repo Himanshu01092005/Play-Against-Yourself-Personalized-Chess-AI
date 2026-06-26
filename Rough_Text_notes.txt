@@ -48,3 +48,57 @@ lichess_bot.py: A background service script that uses the berserk library to con
 
 
 .\.venv\Scripts\python.exe lichess_bot.py for running localay it is becuase when deloy i downgraded the version so to solve that error.
+
+
+The math part from the maia paper:
+
+Part 1: The Math Sizes (Following the Data)
+Imagine we are feeding a batch of 64 chess positions into the network at the exact same time. Here is the exact size of the data at every single step of the MaiaNet architecture:
+
+1. The Input (What goes in)
+
+Size: [64, 112, 8, 8]
+reaminder to me here in 112 
+Layers 0 to 5: Where your Pawns, Knights, Bishops, Rooks, Queens, and King are.
+
+Layers 6 to 11: Where your opponent's pieces are.
+
+Layer 12: The exact square where an en passant capture is currently legal.
+
+Layers 13 to 103: Empty!
+What it represents: 64 games happening at once. 112 layers of visual information (where the pawns are, whose turn it is, etc.). 8x8 is the literal chess board.
+
+2. The Input Convolution (The First Impression)
+
+Size: [64, 64, 8, 8]
+
+What it represents: The network compresses those 112 layers down into 64 "thinking channels." The board size stays 8x8.
+
+3. The 6 Residual Blocks (The Deep Thinking)
+
+Size: [64, 64, 8, 8]
+
+What it represents: The size never changes here. The data just passes through this 64-channel block 6 times in a row. This is the "backbone" where the AI calculates its deep chess understanding (patterns, tactics, safety).
+
+4. The Split (Two Heads)
+After thinking, the data splits into two different paths to answer two different questions:
+
+Path A: The Policy Head (Guessing the Move)
+
+Step 1: [64, 80, 8, 8] — It expands to 80 layers (representing 80 different types of moves, like moving up 1 square, moving like a knight, etc.).
+
+Step 2: [64, 5120] — It flattens the 3D board into a flat list of numbers (80 * 8 * 8 = 5120 possible trajectories).
+
+Step 3: [64, 1858] — It uses the gather_indices trick to throw away mathematically impossible moves (like a knight jumping off the edge of the board). It outputs probabilities for the 1,858 strictly legal chess moves.
+
+Path B: The Value Head (Guessing the Winner)
+
+Step 1: [64, 32, 8, 8] — It shrinks the data down to 32 channels.
+
+Step 2: [64, 2048] — It flattens the board.
+
+Step 3: [64, 1] — It uses standard math to crush those 2048 numbers down into a single number. (e.g., +0.9 means White is crushing, -0.8 means Black is crushing).
+
+
+
+
