@@ -11,6 +11,9 @@ You can play against your "digital clone" locally via a custom GUI, or connect i
 * **Lichess API Integration:** Connects your trained PyTorch model directly to Lichess using the `berserk` library to play games online, supporting multiple concurrent matches via multithreading.
 
 ---
+<img width="1915" height="1146" alt="image" src="https://github.com/user-attachments/assets/ec36eb93-d393-4f24-ae38-b9eea5ab00be" />
+
+---
 
 ## Architecture Overview
 
