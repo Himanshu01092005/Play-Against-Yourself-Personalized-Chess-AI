@@ -65,6 +65,9 @@ def get_model_move(model: MaiaNet, board: chess.Board, bot_color: chess.Color, e
         prob = float(policy_probs[idx]) if 0 <= idx < POLICY_SIZE else 0.0
         scored_moves.append((move, prob))
 
+    # CRITICAL FIX: Sort moves by neural network probability in descending order!
+    scored_moves.sort(key=lambda x: x[1], reverse=True)
+
     if not scored_moves:
         return legal_moves[0]
 
