@@ -1,0 +1,49 @@
+What is this project:
+
+
+Importsnt nnote : please make sure you have played atleast nealry 1000 games for this to worl
+
+How to  run this project:
+ok first started the uv 
+no need for requirements as uv will take care of that in .toml
+made teh config file
+important note: first get the id of the person and change the username in the config file otherwise it and upadte the config file rating, base model to near there rating of the user  
+Paper : https://arxiv.org/pdf/2006.01855 ok so there are more complex and better pappers like maia2 and other you can look at github repo of them .
+
+yoou can download the model according to your need from here :https://github.com/CSSLab/maia-chess/releases
+it contain all model just put it in models folder.
+
+Note : make a .env file get the api key (its free)   from lichess and past it into .env file otherwise the bot will not work nd while makin token rember to click play from external as tick in lichess .
+ if you want to play offline on your pc you can use gui_play.py after following the down steps
+
+and yay to run it proceed in this step:
+make the config file change.
+run fetch_games.py
+run analyse_games.py #optional only tell analyis 
+run load_maia_weigths.py this help o download the maia weights 
+then run prepare_training.py  
+then train.py
+
+
+
+
+the fetch games fetch teh games , how it is done is it fetch the archive of the user and then it merges the archive in single file .
+we hit the url api of chess.com and get the arcchived month list then we hit that month list url again to get the games in pgn format and merge them in single file .
+the archive link looks like this :  https://api.chess.com/pub/player/{USERNAME}/games/archives/{YEAR}/{MONTH}
+
+analyse game does the following things: 
+1.top starting moves
+2.avg moves
+3.wins
+4.avg rating
+5.avg moves
+
+load_maia_weigths: solves the issue that maia is in c++ not in yorch so converthe weights 
+
+prepare_training : parses raw PGN chess games, filters out anomalies, and encodes the board states into 112-plane spatial tensors to match the Leela Chess Zero architecture. It then one-hot encodes the human player's moves into an 1858-class policy vector, saving the resulting supervised learning pairs into compressed NumPy chunks
+
+train.py: This script loads the prepared data and initializes the Leela Chess Zero architecture with Maia base weights. It fine-tunes the neural network using PyTorch on the GPU, stopping automatically when the validation accuracy peaks to prevent over-fitting.
+
+lichess_bot.py: A background service script that uses the berserk library to connect the trained PyTorch model directly to the Lichess API. It listens for incoming challenges in real-time, accepts standard games, and uses the neural network to calculate and play moves automatically online.
+
+

@@ -1,0 +1,14 @@
+[project]
+name = "v-2"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "berserk>=0.14.0",
+    "chess>=1.11.2",
+    "numpy>=2.4.6",
+    "python-dotenv>=1.2.2",
+    "requests>=2.34.2",
+    "torch>=2.12.1",
+]
