@@ -16,7 +16,6 @@ You can play against your "digital clone" locally via a custom GUI, or connect i
 
 This bot utilizes a **Leela Chess Zero (Lc0)** network architecture, which is configured specifically to replicate human playstyles (commonly referred to as the MaiaNet architecture). For more information on the science behind this approach, you can read the original [Maia Chess research paper (arXiv:2006.01855)](https://arxiv.org/pdf/2006.01855).
 
-![MaiaNet Architecture](images/image%20copy%202.png)
 
 Unlike Stockfish, which calculates millions of possible moves ahead using a massive search tree to find the mathematically perfect move, this bot uses a **Policy Network**. It looks at the current board position and instantly evaluates: *"In this exact position, what would a human player most likely do?"* It outputs a percentage probability for every possible move, and the bot simply picks the legal move with the highest percentage.
 
