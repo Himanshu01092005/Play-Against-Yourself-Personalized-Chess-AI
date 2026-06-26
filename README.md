@@ -28,7 +28,7 @@ Because your bot is trained on human games, it will play moves that make logical
 ### 1. Installation
 First, clone this repository to your local machine:
 ```bash
-git clone <this-repository-url>
+git clone https://github.com/Himanshu01092005/Play-Against-Yourself-Personalized-Chess-AI
 cd <this-repository-name>
 uv sync
 ```
