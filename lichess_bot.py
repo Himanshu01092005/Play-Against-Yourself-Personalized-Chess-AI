@@ -210,9 +210,13 @@ def main():
 
     engine = None
     engine_path = Path("stockfish/stockfish-windows-x86-64-avx2.exe")
-    if engine_path.exists():
+    
+    # Only try to load the Windows .exe if we are actually on a Windows machine
+    if engine_path.exists() and os.name == 'nt':
         logger.info("Loading Stockfish Blunder Filter...")
         engine = chess.engine.SimpleEngine.popen_uci(str(engine_path))
+    elif engine_path.exists() and os.name != 'nt':
+        logger.warning(f"Stockfish .exe found, but we are on Linux (Render). Blunder filter disabled.")
     else:
         logger.warning(f"Stockfish not found at {engine_path}. Blunder filter disabled.")
 

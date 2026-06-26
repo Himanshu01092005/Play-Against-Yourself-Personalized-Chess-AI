@@ -47,3 +47,4 @@ train.py: This script loads the prepared data and initializes the Leela Chess Ze
 lichess_bot.py: A background service script that uses the berserk library to connect the trained PyTorch model directly to the Lichess API. It listens for incoming challenges in real-time, accepts standard games, and uses the neural network to calculate and play moves automatically online.
 
 
+.\.venv\Scripts\python.exe lichess_bot.py for running localay it is becuase when deloy i downgraded the version so to solve that error.
