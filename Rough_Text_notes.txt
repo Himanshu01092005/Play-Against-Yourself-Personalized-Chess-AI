@@ -1,7 +1,7 @@
 What is this project:
 
 
-Importsnt nnote : please make sure you have played atleast nealry 1000 games for this to worl
+Importsnt note : please make sure you have played atleast nealry 1000 games for this to worl
 
 How to  run this project:
 ok first started the uv 
@@ -100,5 +100,63 @@ Step 2: [64, 2048] — It flattens the board.
 Step 3: [64, 1] — It uses standard math to crush those 2048 numbers down into a single number. (e.g., +0.9 means White is crushing, -0.8 means Black is crushing).
 
 
+Some notes of me on fine tuning:
+Fine-tuning is a specific type of transfer learning .
+Freezing (requires_grad = False)
+have small learning rate
+
+This is the script:
+Whenever you start a new AI project, follow this exact checklist:
+
+Gather your raw data and clean out the junk.
+
+Write a script to convert the raw data into numerical Tensors.
+
+Download the pre-trained weights of an existing model.
+
+Recreate the exact Python architecture of that model.
+
+Load the weights into your architecture.
+
+Freeze the backbone; unfreeze the final output heads.
+
+Set a tiny learning rate.
+
+Run the training loop while actively watching the Validation Loss.
+
+Stop training the exact moment Validation Loss stops going down.
 
 
+56000 parameters:
+The General Engineering Formulas:
+Convolutional Layer (Conv2d):$$\text{Parameters} = (\text{In Channels} \times \text{Out Channels} \times \text{Kernel Size}^2) + \text{Biases (if bias=True)}
+$$Batch Normalization (BatchNorm2d):$$\text{Parameters} = 2 \times \text{Channels} \quad (\text{Learnable parameters: scale } \gamma \text{ and shift } \beta)
+$$Linear Layer (Linear):$$\text{Parameters} = (\text{Input Nodes} \times \text{Output Nodes}) + \text{Biases (if bias=True)}$$
+
+
+some interview que could be asked:
+Q1: Why use a scalar weight of 0.01 for the value loss instead of weighting them equally?
+Answer: "We apply a $0.01$ coefficient multiplier to scale down the value gradient updates because the two tasks operate on fundamentally different loss scales and optimization dynamics. 
+Policy prediction is treated as a high-dimensional classification problem over a sequence of discrete choices, where cross-entropy loss values naturally start quite high.
+Value prediction is an MSE regression constrained tightly between $-1.0$ and $+1.0$. 
+If we weighted them equally ($1:1$), the aggressive gradients computed by the value head would overrule the shared residual layers, causing the model to prioritize state evaluation while causing the move policy capabilities to degrade. 
+The $0.01$ constant balances their influence so the value head acts strictly as a regularization layer.
+
+"Q2: Walk me through the mathematical transformation from the raw output of policy_conv to the final shape of [Batch, POLICY_SIZE].
+Answer: "The execution pipeline proceeds through three distinct structural transformations:
+The input tensor emerges from the policy_conv block maintaining spatial mapping at a shape of [Batch, 80, 8, 8].
+We apply a spatial flattening layer via .view(p.size(0), -1).
+ This collapses the channel and spatial dimensions into a single flat feature axis, transforming the tensor to a dimension matrix of [Batch, 5120].
+ To map this down to physically valid legal moves, we run tensor slicing via advanced indexing: p[:, self.gather_indices]. 
+ gather_indices is a pre-calculated index look-up matrix mapping the valid coordinates.
+  This operation reduces the second dimension from the absolute spatial combination pool of 5,120 down to the specific legal move vector structure of [Batch, POLICY_SIZE].
+  
+  
+"Q3: If training loss is dropping to near-zero, but validation loss plateaus and spikes upward, what architectural or hyperparameter changes would you deploy?
+Answer: "This behavior indicates severe model overfitting where the model is memorizing the specific training dataset distribution instead of learning generalizable features. 
+To fix this, I would implement three primary adjustments:
+Regularization: Increase the label_smoothing parameter in F.cross_entropy from $0.1$ to $0.15$ or $0.2$ to restrict the optimization engine from becoming overconfident on noisy targets, and add dropout layers inside the unfrozen linear mapping heads.
+
+Weight Decay: Increase the $L_2$ regularization component inside the Adam optimizer (raising weight_decay from 1e-4 to 1e-3) to structurally penalize large weight magnitudes.
+
+Optimization Interruption: Rely directly on an automated Early Stopping class monitoring the validation loop. The moment the moving average validation loss plateaus for more than a set patience threshold, execution terminates and resets the network weights back to the checkpoint file tracking the lowest validation error point."
