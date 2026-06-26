@@ -29,7 +29,7 @@ Because your bot is trained on human games, it will play moves that make logical
 First, clone this repository to your local machine:
 ```bash
 git clone https://github.com/Himanshu01092005/Play-Against-Yourself-Personalized-Chess-AI
-cd <this-repository-name>
+cd Play-Against-Yourself-Personalized-Chess-AI
 uv sync
 ```
 *(Note: To train on an NVIDIA GPU on Windows, you must install the CUDA version of PyTorch: `uv pip install --reinstall torch --index-url https://download.pytorch.org/whl/cu121`)*
